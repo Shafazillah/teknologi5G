@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teknologi 5G & Kesalinghubungan Digital di Malaysia</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Montserrat and Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif; /* Main body font */
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #334155; /* Dark slate gray text */
+            font-size: 0.95rem; /* Slightly smaller base font size */
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            position: relative; /* Added for absolute positioning of language buttons */
+        }
+        .section-title {
+            border-bottom: 2px solid #3b82f6; /* Blue border */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem; /* Adjusted for even smaller section titles */
+        }
+        .card {
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.3s ease; /* Smooth transition for background change */
+        }
+        /* Toggle switch specific styles */
+        .language-toggle {
+            position: relative;
+            display: inline-block;
+            width: 80px; /* Width of the toggle */
+            height: 34px; /* Height of the toggle */
+            z-index: 10; /* Ensure it's above other elements */
+        }
+        .language-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px; /* Rounded slider */
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%; /* Circular handle */
+        }
+        input:checked + .slider {
+            background-color: #2196F3; /* Blue when checked (English) */
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        input:checked + .slider:before {
+            -webkit-transform: translateX(46px); /* Move right for English */
+            -ms-transform: translateX(46px);
+            transform: translateX(46px);
+        }
+        .slider-labels {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 500;
+            pointer-events: none; /* Allow clicks to pass through to the slider */
+        }
+        .slider-labels span {
+            transition: opacity 0.4s ease;
+        }
+        .slider-labels .label-ms {
+            opacity: 1; /* Default active */
+            color: #334155; /* Darker text for BM when slider is left */
+        }
+        .slider-labels .label-en {
+            opacity: 0; /* Default inactive */
+            color: #ffffff; /* White text for BI when slider is right */
+        }
+        input:checked + .slider .label-ms {
+            opacity: 0;
+        }
+        input:checked + .slider .label-en {
+            opacity: 1;
+        }
+
+        /* Tab specific styles */
+        .tab-button {
+            padding: 0.7rem 1.1rem; /* Slightly smaller padding for tabs */
+            border-radius: 0.5rem 0.5rem 0 0; /* Rounded top corners */
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: 1px solid transparent; /* Default transparent border */
+            border-bottom: none; /* No bottom border for inactive tabs */
+            font-size: 0.9rem; /* Slightly smaller font for tabs */
+        }
+        /* Specific colors for each tab */
+        #tab-basics {
+            background-color: #a7f3d0; /* Green-100 */
+            color: #065f46; /* Green-800 */
+        }
+        #tab-basics.active-tab {
+            background-color: #34d399; /* Green-400 */
+            color: #ffffff;
+            border-color: #34d399;
+        }
+        #tab-basics:hover:not(.active-tab) {
+            background-color: #6ee7b7; /* Green-300 */
+        }
+
+        #tab-rollout {
+            background-color: #bfdbfe; /* Blue-100 */
+            color: #1e40af; /* Blue-800 */
+        }
+        #tab-rollout.active-tab {
+            background-color: #60a5fa; /* Blue-400 */
+            color: #ffffff;
+            border-color: #60a5fa;
+        }
+        #tab-rollout:hover:not(.active-tab) {
+            background-color: #93c5fd; /* Blue-300 */
+        }
+
+        /* New colors for tab-economy (Orange) */
+        #tab-economy {
+            background-color: #ffedd5; /* Orange-100 */
+            color: #c2410c; /* Orange-800 */
+        }
+        #tab-economy.active-tab {
+            background-color: #f97316; /* Orange-500 */
+            color: #ffffff;
+            border-color: #f97316;
+        }
+        #tab-economy:hover:not(.active-tab) {
+            background-color: #fb923c; /* Orange-400 */
+        }
+
+        #tab-challenges {
+            background-color: #fee2e2; /* Red-100 */
+            color: #991b1b; /* Red-800 */
+        }
+        #tab-challenges.active-tab {
+            background-color: #ef4444; /* Red-400 */
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+        #tab-challenges:hover:not(.active-tab) {
+            background-color: #fca5a5; /* Red-300 */
+        }
+
+        .tab-button.active-tab {
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for active tab */
+        }
+        .tab-content {
+            display: none; /* Hide all tab content by default */
+            border: 1px solid #cbd5e1; /* Border for content area */
+            border-top: none; /* No top border, as tab button provides it */
+            border-radius: 0 0 0.75rem 0.75rem; /* Rounded bottom corners */
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .tab-content.active-content {
+            display: block; /* Show active tab content */
+        }
+        h1 {
+            font-family: 'Poppins', sans-serif; /* Changed font to Poppins */
+            font-size: 3.0rem; /* Adjusted font size for main title */
+            font-weight: 700; /* Made bolder */
+            line-height: 1.2; /* Adjusted line height for better spacing */
+            color: #334155; /* Dark text for contrast with light cloud background */
+            text-transform: uppercase; /* Convert text to uppercase */
+        }
+        .main-header p { /* Target paragraph specifically within main-header */
+            font-family: 'Poppins', sans-serif; /* Changed font to Poppins */
+            font-size: 0.95rem; /* Slightly smaller for better readability */
+            color: #475569; /* Slightly darker text for contrast with light cloud background */
+        }
+        h3 {
+            font-size: 1.15rem; /* Adjusted for smaller overall text */
+        }
+        ul {
+            font-size: 0.9rem; /* Adjusted for smaller overall text */
+        }
+        /* Header specific styles for attractiveness (Cloud Design) */
+        .main-header {
+            padding-top: 3rem; /* Adjusted top padding */
+            padding-bottom: 2.5rem; /* Adjusted bottom padding */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Softer, more diffused shadow */
+            transition: transform 0.3s ease-in-out; /* Smooth transition for hover effect */
+            background: linear-gradient(to bottom, #ffffff, #e0f2fe); /* Light blue-white gradient for airy feel */
+            border-radius: 50% 20% 50% 20% / 20% 50% 20% 50%; /* Cloud-like shape */
+            margin-bottom: 2rem; /* Adjusted margin-bottom */
+            text-align: center; /* Centered text */
+            border: 1px solid #cbd5e1; /* Subtle border */
+        }
+        .main-header:hover {
+            transform: translateY(-8px); /* More pronounced lift effect on hover */
+        }
+        .absolute.top-4.right-4 { /* Adjusted position of language buttons */
+            top: 1rem; /* Moved slightly higher to give more space */
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container">
+        <!-- Language Toggle Switch - Positioned at top right -->
+        <div class="absolute top-4 right-4 z-10">
+            <label class="language-toggle">
+                <input type="checkbox" id="language-switch">
+                <span class="slider">
+                    <span class="slider-labels">
+                        <span class="label-ms">BM</span>
+                        <span class="label-en">BI</span>
+                    </span>
+                </span>
+            </label>
+        </div>
+
+        <!-- Header Section -->
+        <header class="main-header mb-8">
+            <h1 class="font-bold mb-2" data-lang-ml="Teknologi 5G dan Kesalinghubungan Digital: Memacu Transformasi Ekonomi Malaysia" data-lang-en="5G Technology and Digital Connectivity: Driving Malaysia's Economic Transformation">
+                Teknologi 5G dan Kesalinghubungan Digital: Memacu Transformasi Ekonomi Malaysia
+            </h1>
+            <p class="text-lg" data-lang-ml="Pada tahun 2025, Malaysia berada di era di mana Teknologi 5G bukan lagi sekadar janji masa depan, tetapi menjadi pemangkin utama bagi transformasi ekonomi dan digital negara." data-lang-en="In 2025, Malaysia is in an era where 5G Technology is no longer just a promise of the future, but a key catalyst for the nation's economic and digital transformation.">
+                Pada tahun 2025, Malaysia berada di era di mana Teknologi 5G bukan lagi sekadar janji masa depan, tetapi menjadi pemangkin utama bagi transformasi ekonomi dan digital negara.
+            </p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="flex justify-center mb-0 border-b border-gray-300">
+            <button id="tab-basics" class="tab-button active-tab" onclick="openTab('basics')">
+                <span data-lang-ml="Asas 5G" data-lang-en="5G Basics">Asas 5G</span>
+            </button>
+            <button id="tab-rollout" class="tab-button" onclick="openTab('rollout')">
+                <span data-lang-ml="Peluasan 5G" data-lang-en="5G Rollout">Peluasan 5G</span>
+            </button>
+            <button id="tab-economy" class="tab-button" onclick="openTab('economy')">
+                <span data-lang-ml="Pemacu Ekonomi" data-lang-en="Economic Driver">Pemacu Ekonomi</span>
+            </button>
+            <button id="tab-challenges" class="tab-button" onclick="openTab('challenges')">
+                <span data-lang-ml="Cabaran & Peluang" data-lang-en="Challenges & Ops">Cabaran & Peluang</span>
+            </button>
+        </div>
+
+        <!-- Tab Content Areas -->
+
+        <!-- Memahami Asas 5G Tab Content -->
+        <div id="content-basics" class="tab-content card">
+            <h2 class="text-2xl font-semibold section-title" data-lang-ml="Memahami Asas 5G: Lebih Daripada Kelajuan Ultra-Tinggi" data-lang-en="Understanding 5G Basics: More Than Ultra-High Speed">
+                Memahami Asas 5G: Lebih Daripada Kelajuan Ultra-Tinggi
+            </h2>
+            <p class="mb-4" data-lang-ml="Tiga ciri utama 5G yang menjadikannya pengubah permainan dalam teknologi adalah:" data-lang-en="The three main characteristics of 5G that make it a game-changer in technology are:">
+                Tiga ciri utama 5G yang menjadikannya pengubah permainan dalam teknologi adalah:
+            </p>
+            <ul class="list-disc pl-5 space-y-3">
+                <li>
+                    <strong data-lang-ml="Kelajuan Ultra-Tinggi (eMBB):" data-lang-en="Ultra-High Speed (eMBB):">Kelajuan Ultra-Tinggi (Enhanced Mobile Broadband - eMBB):</strong>
+                    <span data-lang-ml="Kelajuan muat turun/muat naik berganda lebih pantas dari 4G, membolehkan penstriman 4K/8K lancar dan muat turun fail besar segera, membuka peluang akses digital pantas di kawasan seperti Baling." data-lang-en="Download/upload speeds many times faster than 4G, enabling smooth 4K/8K streaming and instant large file downloads, opening opportunities for fast digital access in areas like Baling.">
+                        Kelajuan muat turun/muat naik berganda lebih pantas dari 4G, membolehkan penstriman 4K/8K lancar dan muat turun fail besar segera, membuka peluang akses digital pantas di kawasan seperti Baling.
+                    </span>
+                </li>
+                <li>
+                    <strong data-lang-ml="Latensi Sangat Rendah (URLLC):" data-lang-en="Ultra-Low Latency (URLLC):">Latensi Sangat Rendah (Ultra-Reliable Low-Latency Communications - URLLC):</strong>
+                    <span data-lang-ml="Mengurangkan masa tindak balas kepada milisaat, penting untuk aplikasi kritikal masa nyata seperti pembedahan robotik, kenderaan autonomi, dan automasi industri tepat." data-lang-en="Reduces response times to milliseconds, crucial for real-time critical applications like robotic surgery, autonomous vehicles, and precise industrial automation.">
+                        Mengurangkan masa tindak balas kepada milisaat, penting untuk aplikasi kritikal masa nyata seperti pembedahan robotik, kenderaan autonomi, dan automasi industri tepat.
+                    </span>
+                </li>
+                <li>
+                    <strong data-lang-ml="Kapasiti Besar (mMTC):" data-lang-en="Massive Capacity (mMTC):">Kapasiti Besar (Massive Machine-Type Communications - mMTC):</strong>
+                    <span data-lang-ml="Menyokong sambungan berbilion-bilion peranti serentak, asas kepada pengembangan IoT, membolehkan interaksi peranti tanpa membebankan rangkaian." data-lang-en="Supports simultaneous connections of billions of devices, foundational for IoT expansion, enabling device interaction without network overload.">
+                        Menyokong sambungan berbilion-bilion peranti serentak, asas kepada pengembangan IoT, membolehkan interaksi peranti tanpa membebankan rangkaian.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Peluasan 5G di Malaysia Tab Content -->
+        <div id="content-rollout" class="tab-content card">
+            <h2 class="text-2xl font-semibold section-title" data-lang-ml="Peluasan 5G di Malaysia: Realiti dan Cabaran" data-lang-en="5G Rollout in Malaysia: Reality and Challenges">
+                Peluasan 5G di Malaysia: Realiti dan Cabaran
+            </h2>
+            <p class="mb-4" data-lang-ml="Malaysia komited kepada pembangunan 5G melalui DNB. Liputan 5G dijangka meluas di bandar utama dan diperluaskan ke kawasan pinggir bandar/luar bandar termasuk Kedah. Model borong tunggal DNB mempercepatkan peluasan dan mengurangkan kos, namun cabaran seperti topografi berbukit, kos infrastruktur, dan peningkatan gentian optik perlu diatasi untuk akses sama rata." data-lang-en="Malaysia is committed to 5G development via DNB. 5G coverage is expected to be widespread in major cities and expanded to suburban/rural areas including Kedah. DNB's single wholesale model accelerates rollout and reduces costs, but challenges like hilly topography, infrastructure costs, and fiber optic upgrades need to be addressed for equitable access.">
+                Malaysia komited kepada pembangunan 5G melalui DNB. Liputan 5G dijangka meluas di bandar utama dan diperluaskan ke kawasan pinggir bandar/luar bandar termasuk Kedah. Model borong tunggal DNB mempercepatkan peluasan dan mengurangkan kos, namun cabaran seperti topografi berbukit, kos infrastruktur, dan peningkatan gentian optik perlu diatasi untuk akses sama rata.
+            </p>
+        </div>
+
+        <!-- 5G sebagai Pemacu Transformasi Ekonomi Tab Content -->
+        <div id="content-economy" class="tab-content card">
+            <h2 class="text-2xl font-semibold section-title" data-lang-ml="5G sebagai Pemacu Ekonomi: Tumpuan Sektor Utama" data-lang-en="5G as an Economic Transformation Driver: Key Sector Focus">
+                5G sebagai Pemacu Ekonomi: Tumpuan Sektor Utama
+            </h2>
+            <p class="mb-4" data-lang-ml="Keupayaan 5G memacu transformasi ekonomi Malaysia jelas dalam beberapa sektor utama:" data-lang-en="5G's ability to drive Malaysia's economic transformation is evident in several key sectors:">
+                Keupayaan 5G memacu transformasi ekonomi Malaysia jelas dalam beberapa sektor utama:
+            </p>
+
+            <!-- Transformasi Sektor Pertanian Pintar di Kedah -->
+            <h3 class="text-xl font-semibold mb-3" data-lang-ml="Transformasi Sektor Pertanian Pintar di Kedah" data-lang-en="Transformation of Smart Agriculture Sector in Kedah">
+                Transformasi Sektor Pertanian Pintar di Kedah
+            </h3>
+            <p class="mb-3" data-lang-ml="Kedah, 'Jelapang Padi Malaysia,' berpotensi besar merevolusikan pertanian melalui 5G, membolehkan:" data-lang-en="Kedah, the 'Rice Bowl of Malaysia,' has great potential to revolutionize agriculture through 5G, enabling:">
+                Kedah, 'Jelapang Padi Malaysia,' berpotensi besar merevolusikan pertanian melalui 5G, membolehkan:
+            </p>
+            <ul class="list-disc pl-5 space-y-3 mb-4">
+                <li>
+                    <strong data-lang-ml="Pemantauan Berketepatan Tinggi:" data-lang-en="High-Precision Monitoring:">Pemantauan Berketepatan Tinggi:</strong>
+                    <span data-lang-ml="Sensor IoT 5G menghantar data masa nyata (kelembapan tanah, nutrien, suhu, penyakit) dari ladang. Dron pertanian 5G strim data visual langsung, membolehkan tindakan segera petani." data-lang-en="5G IoT sensors transmit real-time data (soil moisture, nutrients, temperature, diseases) from farms. 5G agricultural drones stream live visual data, enabling enabling immediate farmer action.">
+                        Sensor IoT 5G menghantar data masa nyata (kelembapan tanah, nutrien, suhu, penyakit) dari ladang. Dron pertanian 5G strim data visual langsung, mengenal pasti kawasan yang memerlukan intervensi spesifik. Latensi rendah 5G memastikan petani dapat bertindak segera.
+                    </span>
+                </li>
+                <li>
+                    <strong data-lang-ml="Automasi & Pengurusan Sumber Cekap:" data-lang-en="Automation & Efficient Resource Management:">Automasi dan Pengurusan Sumber Cekap:</strong>
+                    <span data-lang-ml="Sistem pengairan pintar automatik mengurangkan pembaziran air. Jentera autonomi dikawal 5G meningkatkan kecekapan operasi. Penjejakan hasil pertanian dari ladang ke meja meningkatkan ketelusan rantaian bekalan, meningkatkan hasil dan mengurangkan kos." data-lang-en="Automated smart irrigation systems reduce water waste. 5G-controlled autonomous machinery boosts operational efficiency. Farm-to-table produce tracking enhances supply chain transparency, increasing yields and cutting costs.">
+                        Sistem pengairan pintar automatik mengurangkan pembaziran air. Di masa hadapan, jentera pertanian autonomi boleh dikawal dan dipantau melalui 5G untuk meningkatkan kecekapan operasi. 5G juga boleh memperkasakan penjejakan hasil pertanian dari ladang ke meja, meningkatkan ketelusan rantaian bekalan. Inovasi ini dapat meningkatkan hasil tanaman, mengurangkan kos operasi, dan menjadikan sektor pertanian Kedah lebih berdaya saing serta mampan, menarik minat generasi muda.
+                    </span>
+                </li>
+            </ul>
+
+            <!-- Inovasi dalam Pendidikan Digital di Malaysia -->
+            <h3 class="text-xl font-semibold mb-3" data-lang-ml="Inovasi dalam Pendidikan Digital di Malaysia" data-lang-en="Innovation in Digital Education in Malaysia">
+                Inovasi dalam Pendidikan Digital di Malaysia
+            </h3>
+            <p class="mb-3" data-lang-ml="5G berpotensi merapatkan jurang digital dan memperkaya pembelajaran melalui:" data-lang-en="5G has the potential to bridge the digital divide and enrich learning through:">
+                5G berpotensi merapatkan jurang digital dan memperkaya pembelajaran melalui:
+            </p>
+            <ul class="list-disc pl-5 space-y-3 mb-4">
+                <li>
+                    <strong data-lang-ml="Pengalaman Pembelajaran Interaktif Imersif:" data-lang-en="Immersive Interactive Learning Experience:">Pengalaman Pembelajaran Interaktif Imersif:</strong>
+                    <span data-lang-ml="5G mengubah bilik darjah kepada persekitaran VR/AR imersif untuk lawatan maya dan eksperimen sains kompleks tanpa lag, menjadikan pembelajaran lebih menarik dan berkesan, terutama di Baling." data-lang-en="5G transforms classrooms into immersive VR/AR environments for virtual tours and complex science experiments without lag, making learning more engaging and effective, especially in Baling.">
+                        5G mengubah bilik darjah kepada persekitaran VR/AR imersif untuk lawatan maya dan eksperimen sains kompleks tanpa lag, menjadikan pembelajaran lebih menarik dan berkesan, terutama di Baling.
+                    </span>
+                </li>
+                <li>
+                    <strong data-lang-ml="Akses & Kesaksamaan Pendidikan:" data-lang-en="Access & Educational Equity:">Akses dan Kesaksamaan Pendidikan:</strong>
+                    <span data-lang-ml="5G memastikan pelajar luar bandar akses lebih baik kepada sumber digital, e-pembelajaran, dan kursus dalam talian, merapatkan jurang digital. Kelas maya HD lancar membolehkan interaksi bermakna guru-pelajar." data-lang-en="5G ensures rural students better access to digital resources, e-learning, and online courses, bridging the digital divide. Smooth HD virtual classes enable meaningful teacher-student interaction.">
+                        5G memastikan pelajar luar bandar akses lebih baik kepada sumber digital, e-pembelajaran, dan kursus dalam talian, merapatkan jurang digital. Kelas maya HD lancar membolehkan interaksi bermakna guru-pelajar.
+                    </span>
+                </li>
+                <li>
+                    <strong data-lang-ml="Pembangunan Kemahiran Digital:" data-lang-en="Digital Skill Development:">Pembangunan Kemahiran Digital:</strong>
+                    <span data-lang-ml="Infrastruktur 5G membolehkan institusi menawarkan kursus/latihan AI dan IoT, menyediakan pelajar untuk pasaran kerja masa depan." data-lang-en="5G infrastructure enables institutions to offer AI and IoT courses/training, preparing students for the future job market.">
+                        Infrastruktur 5G membolehkan institusi menawarkan kursus/latihan AI dan IoT, menyediakan pelajar untuk pasaran kerja masa depan.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Cabaran dan Peluang ke Hadapan Tab Content -->
+        <div id="content-challenges" class="tab-content card">
+            <h2 class="text-2xl font-semibold section-title" data-lang-ml="Cabaran dan Peluang ke Hadapan" data-lang-en="Challenges and Opportunities Ahead">
+                Cabaran dan Peluang ke Hadapan
+            </h2>
+            <p class="mb-4" data-lang-ml="Walaupun potensi 5G besar, cabaran perlu diatasi: latihan kemahiran tenaga kerja (5G, AI, IoT), keselamatan siber, rangka kerja regulatori yang adaptif, dan peningkatan kesedaran awam." data-lang-en="Despite 5G's vast potential, challenges remain: workforce upskilling (5G, AI, IoT), cybersecurity, adaptive regulatory frameworks, and increased public awareness.">
+                Walaupun potensi 5G besar, cabaran perlu diatasi: latihan kemahiran tenaga kerja (5G, AI, IoT), keselamatan siber, rangka kerja regulatori yang adaptif, dan peningkatan kesedaran awam.
+            </p>
+            <p data-lang-ml="Secara keseluruhannya, Teknologi 5G adalah infrastruktur asas yang memacu transformasi ekonomi dan sosial Malaysia. Memanfaatkan keupayaan 5G sepenuhnya akan memperkasa industri, meningkatkan kualiti hidup, dan melonjakkan kedudukan Malaysia dalam ekonomi digital global." data-lang-en="Overall, 5G Technology is a fundamental infrastructure driving Malaysia's economic and social transformation. Fully leveraging 5G's capabilities will empower industries, improve quality of life, and elevate Malaysia's position in the global digital economy.">
+                Secara keseluruhannya, Teknologi 5G adalah infrastruktur asas yang memacu transformasi ekonomi dan sosial Malaysia. Memanfaatkan keupayaan 5G sepenuhnya akan memperkasa industri, meningkatkan kualiti hidup, dan melonjakkan kedudukan Malaysia dalam ekonomi digital global.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // Mapping of tab names to their corresponding content background colors (lighter shades)
+        const tabContentColors = {
+            'basics': '#a7f3d0', // Green-100
+            'rollout': '#bfdbfe', // Blue-100
+            'economy': '#ffedd5', // Orange-100 (Updated)
+            'challenges': '#fee2e2' // Red-100
+        };
+
+        // Function to set the language
+        function setLanguage(lang) {
+            // Get all elements with data-lang-ml or data-lang-en attributes
+            const elements = document.querySelectorAll('[data-lang-ml], [data-lang-en]');
+
+            elements.forEach(element => {
+                if (lang === 'ms' && element.dataset.langMl) {
+                    element.textContent = element.dataset.langMl;
+                } else if (lang === 'en' && element.dataset.langEn) {
+                    element.textContent = element.dataset.langEn;
+                }
+            });
+
+            // Update the toggle switch state
+            const langSwitch = document.getElementById('language-switch');
+            langSwitch.checked = (lang === 'en'); // true for 'en', false for 'ms'
+
+            // Set the lang attribute on the html tag
+            document.documentElement.lang = lang;
+
+            // Re-open the currently active tab to update its text and content color if needed
+            const activeTabButton = document.querySelector('.tab-button.active-tab');
+            if (activeTabButton) {
+                const tabId = activeTabButton.id.replace('tab-', '');
+                openTab(tabId); // This will re-render the content with the new language and color
+            }
+        }
+
+        // Function to open specific tab content
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active-content');
+            });
+
+            // Deactivate all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active-tab');
+            });
+
+            // Show the selected tab content
+            const activeContentDiv = document.getElementById(`content-${tabName}`);
+            activeContentDiv.classList.add('active-content');
+            
+            // Set the background color of the active tab content
+            activeContentDiv.style.backgroundColor = tabContentColors[tabName];
+
+            // Activate the corresponding tab button
+            document.getElementById(`tab-${tabName}`).classList.add('active-tab');
+        }
+
+        // Event listener for the language switch
+        document.addEventListener('DOMContentLoaded', function() {
+            const langSwitch = document.getElementById('language-switch');
+            langSwitch.addEventListener('change', function() {
+                if (this.checked) {
+                    setLanguage('en'); // If checked, switch to English
+                } else {
+                    setLanguage('ms'); // If unchecked, switch to Malay
+                }
+            });
+
+            // Set default language to Malay and open the first tab on page load
+            setLanguage('ms');
+            openTab('basics'); // Open the "Asas 5G" tab by default
+        });
+    </script>
+</body>
+</html>
